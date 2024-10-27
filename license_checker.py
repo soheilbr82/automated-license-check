@@ -5,6 +5,9 @@ import sys
 import glob
 import toml
 import importlib.util
+import re
+import difflib
+
 
 def is_builtin_module(module_name):
     """
@@ -108,12 +111,77 @@ def parse_poetry_lock(file_path):
     return dependencies
 
 
+
+def normalize_license_name(license_name):
+    """
+    Normalize the license name to improve comparison.
+    This converts the license name to lowercase, strips unnecessary words like 'license',
+    replaces different punctuation (slashes, commas), and standardizes common license names.
+    """
+    # Step 1: Convert to lowercase for case-insensitive matching
+    normalized = license_name.lower()
+
+    # Step 2: Remove the word 'license', 'version', 'v', and 'with' for simplicity
+    normalized = re.sub(r'\blicense\b', '', normalized)
+    normalized = re.sub(r'\bversion\b', '', normalized)
+    normalized = re.sub(r'\bv\b', '', normalized)
+    normalized = re.sub(r'\bwith\b', '', normalized)
+
+    # Step 3: Replace punctuation variations (commas, slashes, and other special chars) with spaces or hyphens
+    normalized = re.sub(r'[,/]', ' ', normalized)
+    normalized = re.sub(r'[-_]', ' ', normalized)  # Treat hyphens and underscores as spaces
+    normalized = re.sub(r'\s+', ' ', normalized)  # Replace multiple spaces with one space
+
+    # Step 4: Remove common exceptions or extensions in licenses (e.g., "with Classpath exception")
+    normalized = re.sub(r'with.*exception', '', normalized).strip()
+
+    # Step 5: Standardize common license names to their SPDX identifiers
+    known_licenses = {
+        "mit": "MIT",
+        "apache 2 0": "Apache-2.0",
+        "apache license 2 0": "Apache-2.0",
+        "apache license": "Apache-2.0",
+        "bsd 3 clause": "BSD-3-Clause",
+        "bsd 2 clause": "BSD-2-Clause",
+        "gnu general public 2 0": "GPL-2.0",
+        "gnu general public 3 0": "GPL-3.0",
+        "gpl 2 0": "GPL-2.0",
+        "gpl 3 0": "GPL-3.0",
+        "gnu lesser general public 2 1": "LGPL-2.1",
+        "gnu lesser general public 3 0": "LGPL-3.0",
+        "lgpl 2 1": "LGPL-2.1",
+        "lgpl 3 0": "LGPL-3.0",
+        "agpl 3 0": "AGPL-3.0",
+        "gnu affero general public 3 0": "AGPL-3.0",
+        "mozilla public 2 0": "MPL-2.0",
+        "mpl 2 0": "MPL-2.0",
+        "eclipse public 2 0": "EPL-2.0",
+        "epl 2 0": "EPL-2.0",
+        "unlicense": "Unlicense",
+        "cc0": "CC0-1.0",
+        "creative commons zero": "CC0-1.0",
+        "zlib": "Zlib",
+        "artistic 2 0": "Artistic-2.0",
+        "bsd 0 clause": "0BSD",
+        "wtfpl": "WTFPL"
+    }
+
+    # Step 6: Normalize known licenses
+    normalized = known_licenses.get(normalized.strip(), normalized.strip())
+
+    # Step 7: Attempt fuzzy matching for unknown licenses
+    if normalized not in known_licenses.values():
+        closest_match = difflib.get_close_matches(normalized, known_licenses.values(), n=1)
+        if closest_match:
+            normalized = closest_match[0]  # Pick the closest match if available
+
+    return normalized
+
 def check_package_licenses(packages):
     """Uses pip-licenses to retrieve license information of packages."""
-    # First, attempt a dry-run install of all packages to check for validity.
     valid_packages = set()
     
-    # Check which packages can be installed by simulating a dry-run.
+    # Step 1: Check which packages can be installed by simulating a dry-run
     result = subprocess.run(['pip', 'install', '--dry-run'] + list(packages), capture_output=True, text=True)
     
     # Only add packages that do not cause installation errors
@@ -128,15 +196,25 @@ def check_package_licenses(packages):
     # Install only valid third-party packages
     subprocess.run(['pip', 'install'] + list(valid_packages), check=False)
     
-    # Run pip-licenses to get license information
+    # Step 2: Run pip-licenses to get license information
     result = subprocess.run(['pip-licenses', '--from=mixed'], capture_output=True, text=True)
+    
+    # Debugging: Print raw output from pip-licenses
+    print("\nRaw License Output from pip-licenses:\n", result.stdout)
+
     licenses = {}
     
+    # Step 3: Normalize the license names
     for line in result.stdout.splitlines()[2:]:  # Skip the header lines
         columns = line.split()
         package_name = columns[0]
-        license_type = columns[-1]  # Assuming the last column is the license
-        licenses[package_name] = license_type
+        license_type = " ".join(columns[1:])  # Handle multi-word licenses
+        normalized_license = normalize_license_name(license_type)
+        
+        # Debugging: Print raw and normalized license types
+        print(f"Package: {package_name}, Raw License: {license_type}, Normalized License: {normalized_license}")
+        
+        licenses[package_name] = normalized_license
     
     return licenses
 
@@ -145,9 +223,17 @@ def check_compliance(licenses, allowed_licenses):
     """Checks if the package licenses comply with the allowed licenses."""
     non_compliant = []
     
+    # Normalize the allowed licenses
+    normalized_allowed_licenses = [normalize_license_name(lic) for lic in allowed_licenses]
+
+    # Debugging: Print the normalized allowed licenses
+    print(f"\nAllowed Licenses (Normalized): {normalized_allowed_licenses}\n")
+
     for package, license in licenses.items():
-        if license not in allowed_licenses:
+        if license not in normalized_allowed_licenses:
             non_compliant.append((package, license))
+            # Debugging: Print non-compliant packages
+            print(f"Non-compliant package found: {package} with license {license}")
     
     return non_compliant
 
