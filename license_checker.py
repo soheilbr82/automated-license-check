@@ -151,10 +151,13 @@ def check_compliance(licenses, allowed_licenses):
     
     return non_compliant
 
-
-if __name__ == "__main__":
+def main():
     project_dir = '.'
-    allowed_licenses = sys.argv[1].split(',')  # Pass allowed licenses as argument
+    if len(sys.argv) > 1:
+        allowed_licenses = sys.argv[1].split(',')
+        
+    else:
+        allowed_licenses = ["MIT", "Apache-2.0", "BSD-3-Clause"]  # Default licenses
 
     # Step 1: Get imported packages from Python scripts
     detected_imports = scan_directory_for_imports(project_dir)
@@ -190,3 +193,8 @@ if __name__ == "__main__":
         sys.exit(1)  # Fail the workflow if non-compliant packages are found
     else:
         print("All packages are compliant.")
+
+
+if __name__ == "__main__":
+    main()
+    
