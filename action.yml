@@ -1,0 +1,17 @@
+name: "Automated License Compliance Checker"
+description: "Scans Python projects for license compliance, including dependencies from requirements files and Poetry."
+
+inputs:
+  allowed_licenses:
+    description: "Comma-separated list of allowed licenses (e.g., MIT, Apache-2.0, BSD-3-Clause)."
+    required: false
+    default: "MIT, Apache-2.0, BSD-3-Clause"
+
+runs:
+  using: "docker"
+  image: "Dockerfile"
+  args:
+    - ${{ inputs.allowed_licenses }}
+
+permissions:
+  contents: read  # Read access to repo contents
