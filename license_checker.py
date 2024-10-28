@@ -111,6 +111,7 @@ def normalize_license_name(license_name, spdx_licenses):
     normalized = license_name.lower()
     normalized = re.sub(r'\blicense\b|\bversion\b|\bv\b|\bwith\b', '', normalized)
     normalized = re.sub(r'[,/_-]', ' ', normalized).strip()
+    normalized = re.sub(r'\d+(\.\d+)*', '', normalized).strip()  # Remove version numbers
 
     print(f"Normalized license name: '{normalized}'")  # Debug print
 
@@ -148,8 +149,9 @@ def check_compliance(licenses, allowed_licenses):
     print(f"Allowed licenses (normalized): {normalized_allowed_licenses}")  # Debug print
 
     for package, license in licenses.items():
-        print(f"Checking package: {package}, license: {license}")  # Debug print
-        if license.lower() not in normalized_allowed_licenses:
+        normalized_license = normalize_license_name(license, spdx_licenses)
+        print(f"Checking package: {package}, license: {normalized_license}")  # Debug print
+        if normalized_license.lower() not in normalized_allowed_licenses:
             non_compliant.append((package, license))
             print(f"Non-compliant package found: {package} with license {license}")
     return non_compliant
