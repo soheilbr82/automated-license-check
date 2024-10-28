@@ -1,3 +1,31 @@
+# name: License Compliance Check
+
+# on: [push, pull_request]
+
+# jobs:
+#   license-check:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#     - name: Checkout repository
+#       uses: actions/checkout@v2
+
+#     - name: Set up Python
+#       uses: actions/setup-python@v2
+#       with:
+#         python-version: '3.11'
+
+#     - name: Install dependencies
+#       run: |
+#         python -m pip install --upgrade pip
+#         pip install toml pip-licenses requests
+
+#     - name: Run license checker
+#       run: python license_checker.py ${{ inputs.allowed_licenses }}
+#       env:
+#         ALLOWED_LICENSES: ${{ inputs.allowed_licenses }}
+
+# description: "Scans Python projects for license compliance, including dependencies from requirements files and Poetry."
 name: License Compliance Check
 
 on: [push, pull_request]
@@ -18,10 +46,17 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install toml pip-licenses requests
+        pip install toml requests
+
+    - name: Download and install scancode-toolkit
+      run: |
+        wget https://github.com/nexB/scancode-toolkit/releases/download/v31.0.0/scancode-toolkit-31.0.0.zip
+        unzip scancode-toolkit-31.0.0.zip
+        cd scancode-toolkit-31.0.0
+        ./scancode --version
 
     - name: Run license checker
-      run: python license_checker.py ${{ inputs.allowed_licenses }}
+      run: python license_checkerv2.py ${{ inputs.allowed_licenses }}
       env:
         ALLOWED_LICENSES: ${{ inputs.allowed_licenses }}
 
