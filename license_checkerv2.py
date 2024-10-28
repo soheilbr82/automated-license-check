@@ -51,7 +51,7 @@ def parse_poetry_lock(file_path):
     """Parses poetry.lock and extracts all locked dependencies."""
     dependencies = set()
     if os.path.exists(file_path):
-        with open(file_path, 'r', encoding='utf-8') as f):
+        with open(file_path, 'r', encoding='utf-8') as f:
             poetry_lock_data = toml.load(f)
             dependencies.update({pkg['name'] for pkg in poetry_lock_data.get('package', [])})
     return dependencies
