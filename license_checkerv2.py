@@ -96,9 +96,8 @@ def scan_directory_for_imports(directory):
 def run_scancode(scan_output="scan_results.json", project_dir="."):
     """Run scancode-toolkit to scan the project directory."""
     scancode_command = [
-        "./scancode",
-        "--format", "json-pp",
-        "--output", scan_output,
+        "./scancode-toolkit-v32.3.0/scancode",
+        "--json-pp", scan_output,
         project_dir
     ]
     result = subprocess.run(scancode_command, capture_output=True, text=True)
