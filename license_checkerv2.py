@@ -60,6 +60,8 @@ def is_builtin_module(module_name):
     """Check if a module is a built-in Python module or part of the standard library."""
     try:
         spec = importlib.util.find_spec(module_name)
+        if spec is None:
+            return True
         return spec.origin is None or 'site-packages' not in spec.origin
     except ModuleNotFoundError:
         return True
