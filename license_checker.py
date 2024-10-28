@@ -113,6 +113,20 @@ def normalize_license_name(license_name, spdx_licenses):
     normalized = re.sub(r'[,/_-]', ' ', normalized).strip()
     normalized = re.sub(r'\d+(\.\d+)*', '', normalized).strip()  # Remove version numbers
 
+    # Map common variations to SPDX identifiers
+    common_variations = {
+        'mit': 'mit',
+        'apache software': 'apache-2.0',
+        'bsd zero clause': '0bsd',
+        'bsd 3 clause': 'bsd-3-clause',
+        'bsd 4 clause': 'bsd-4-clause',
+        'bsd original': 'bsd-4-clause',
+        'bsd old': 'bsd-4-clause'
+    }
+
+    if normalized in common_variations:
+        normalized = common_variations[normalized]
+
     print(f"Normalized license name: '{normalized}'")  # Debug print
 
     if normalized in spdx_licenses:
