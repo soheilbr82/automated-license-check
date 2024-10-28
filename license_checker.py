@@ -32,7 +32,7 @@ def download_spdx_licenses(file_path="spdx_licenses.json"):
 
 def load_spdx_licenses(file_path="spdx_licenses.json"):
     """Load the SPDX license list from a JSON file."""
-    with open(file_path, 'r', encoding='utf-8') as f:
+    with open(file_path, 'r', encoding='utf-8') as f):
         spdx_data = json.load(f)
     return {license['licenseId'].lower(): license['name'] for license in spdx_data['licenses']}
 
@@ -116,7 +116,7 @@ def normalize_license_name(license_name, spdx_licenses):
     # Map common variations to SPDX identifiers
     common_variations = {
         'mit': 'mit',
-        'apache software': 'apache-2.0',
+        'apache license': 'apache-2.0',
         'bsd zero clause': '0bsd',
         'bsd 3 clause': 'bsd-3-clause',
         'bsd 4 clause': 'bsd-4-clause',
@@ -159,7 +159,7 @@ def check_package_licenses(packages, spdx_licenses):
 def check_compliance(licenses, allowed_licenses, spdx_licenses):
     """Checks if the package licenses comply with the allowed licenses."""
     non_compliant = []
-    normalized_allowed_licenses = [license.lower() for license in allowed_licenses]
+    normalized_allowed_licenses = [normalize_license_name(license, spdx_licenses).lower() for license in allowed_licenses]
     print(f"Allowed licenses (normalized): {normalized_allowed_licenses}")  # Debug print
 
     for package, license in licenses.items():
