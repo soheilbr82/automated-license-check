@@ -32,7 +32,7 @@ def download_spdx_licenses(file_path="spdx_licenses.json"):
 
 def load_spdx_licenses(file_path="spdx_licenses.json"):
     """Load the SPDX license list from a JSON file."""
-    with open(file_path, 'r', encoding='utf-8') as f):
+    with open(file_path, 'r', encoding='utf-8') as f:
         spdx_data = json.load(f)
     return {license['licenseId'].lower(): license['name'] for license in spdx_data['licenses']}
 
