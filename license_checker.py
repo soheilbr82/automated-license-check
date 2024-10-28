@@ -101,7 +101,7 @@ def parse_poetry_lock(file_path):
     """Parses poetry.lock and extracts all locked dependencies."""
     dependencies = set()
     if os.path.exists(file_path):
-        with open(file_path, 'r', encoding='utf-8') as f:
+        with open(file_path, 'r', encoding='utf-8') as f):
             poetry_lock_data = toml.load(f)
             dependencies.update({pkg['name'] for pkg in poetry_lock_data.get('package', [])})
     return dependencies
@@ -142,7 +142,7 @@ def check_package_licenses(packages, spdx_licenses):
         licenses[package_name] = normalize_license_name(license_type, spdx_licenses)
     return licenses
 
-def check_compliance(licenses, allowed_licenses):
+def check_compliance(licenses, allowed_licenses, spdx_licenses):
     """Checks if the package licenses comply with the allowed licenses."""
     non_compliant = []
     normalized_allowed_licenses = [license.lower() for license in allowed_licenses]
@@ -175,7 +175,7 @@ def main():
 
     all_dependencies = detected_imports.union(all_requirements, poetry_dependencies, poetry_locked_dependencies)
     licenses = check_package_licenses(all_dependencies, spdx_licenses)
-    non_compliant_packages = check_compliance(licenses, allowed_licenses)
+    non_compliant_packages = check_compliance(licenses, allowed_licenses, spdx_licenses)
 
     if non_compliant_packages:
         print("Non-compliant packages found:")
