@@ -30,6 +30,7 @@ name: License Compliance Check
 
 on: [push, pull_request]
 
+
 jobs:
   license-check:
     runs-on: ubuntu-latest
@@ -54,6 +55,7 @@ jobs:
         tar -xzf scancode-toolkit-v32.3.0_py3.11-linux.tar.gz
         cd scancode-toolkit-v32.3.0
         ./scancode --version
+
 
     - name: Run license checker
       run: |

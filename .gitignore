@@ -4,7 +4,7 @@ __pycache__/
 *$py.class
 .vscode
 spdx_licenses.json
-
+.DS_Store
 # C extensions
 *.so
 
