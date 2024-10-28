@@ -59,7 +59,7 @@ jobs:
 
     - name: Run license checker
       run: |
-        cd scancode-toolkit-32.3.0
+        cd scancode-toolkit-v32.3.0
         python ../license_checkerv2.py ${{ inputs.allowed_licenses }}
       env:
         ALLOWED_LICENSES: ${{ inputs.allowed_licenses }}
