@@ -63,7 +63,7 @@ def is_builtin_module(module_name):
         if spec is None:
             return True
         return spec.origin is None or 'site-packages' not in spec.origin
-    except ModuleNotFoundError:
+    except (ModuleNotFoundError, ValueError):
         return True
 
 def extract_imports_from_file(file_path):
