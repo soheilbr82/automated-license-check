@@ -50,13 +50,11 @@ jobs:
 
     - name: Download and install scancode-toolkit
       run: |
-        wget https://github.com/nexB/scancode-toolkit/releases/download/v31.0.0/scancode-toolkit-31.0.0.zip
-        unzip scancode-toolkit-31.0.0.zip -d scancode-toolkit
-        scancode-toolkit/scancode --version
+        wget https://github.com/aboutcode-org/scancode-toolkit/releases/download/v32.3.0/scancode-toolkit-v32.3.0_py3.11-linux.tar.gz
+        tar -xzf scancode-toolkit-v32.3.0_py3.11-linux.tar.gz
+        scancode-toolkit-32.3.0/scancode --version
 
     - name: Run license checker
       run: python license_checkerv2.py ${{ inputs.allowed_licenses }}
       env:
         ALLOWED_LICENSES: ${{ inputs.allowed_licenses }}
-
-description: "Scans Python projects for license compliance, including dependencies from requirements files and Poetry."
