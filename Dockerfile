@@ -17,12 +17,6 @@ ENV PATH="/venv/bin:$PATH"
 RUN /bin/bash -c "/venv/bin/pip install --upgrade pip && source /venv/bin/activate && pip install scancode-toolkit"
 
 
-# # Set working directory
-# WORKDIR /app
-
-# # Copy your project files
-# COPY . /app
-
 # Copy the entrypoint script into the image
 COPY entrypoint.sh /entrypoint.sh
 
@@ -30,7 +24,7 @@ COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 # Set the entrypoint
-ENTRYPOINT ["/entrypoint.sh"]
+# ENTRYPOINT ["/entrypoint.sh"]
 
 # Set the entry point
 CMD ["bash"]
