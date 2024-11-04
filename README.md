@@ -1,4 +1,4 @@
-# automated-license-check
+# Automated License Compliance Checker
 A GitHub Action to automatically scan and verify your Python project’s dependencies for license compliance. Checks requirements.txt, pyproject.toml, and code imports against a customizable list of approved licenses, flagging any non-compliant packages to help you maintain open-source license standards.
 
 
@@ -14,3 +14,20 @@ This action recognizes a comprehensive range of open-source licenses, including 
 
 For full coverage, this action covers licenses listed in the [SPDX License List](https://spdx.org/licenses/).
 You can download the latest SPDX licenses from [spdx/license-list-data](https://github.com/spdx/license-list-data) github repo.
+
+
+
+
+[![GitHub Marketplace](https://img.shields.io/badge/Marketplace-License%20Compliance%20Checker-blue?style=flat-square)](https://github.com/marketplace/actions/automated-license-check)
+
+Scan your codebase for license compliance using Scancode Toolkit.
+
+## **Usage**
+
+Add the following step to your workflow:
+
+```yaml
+- name: Run License Compliance Checker
+  uses: soheilbr82/automated-license-check@v1
+  with:
+    allowed_licenses: "MIT, Apache-2.0, BSD-3-Clause"
