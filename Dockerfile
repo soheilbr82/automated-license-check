@@ -10,10 +10,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Create a directory for the virtual environment
 RUN python -m venv /venv
 
-# # Install dependencies using the virtual environment's pip
-# RUN /venv/bin/pip install --upgrade pip && \
-#     /venv/bin/pip install scancode-toolkit
-
 # Set the PATH environment variable to prioritize the virtual environment
 ENV PATH="/venv/bin:$PATH"
 
@@ -27,16 +23,8 @@ WORKDIR /app
 # Copy your project files
 COPY . /app
 
-# # Create and activate virtual environment
-# RUN python -m venv venv
-
-# # Activate virtual environment and install dependencies
-# RUN /bin/bash -c "source venv/bin/activate && pip install scancode-toolkit"
-
-# Expose any necessary ports (if applicable)
-# EXPOSE 8000
-
 # Set the entry point
 # ENTRYPOINT ["/app/venv/bin/scancode"]
-ENTRYPOINT ["scancode"]
-# CMD ["bash"]
+# ENTRYPOINT ["scancode"]
+CMD ["bash"]
+# CMD ["/venv/bin/scancode --license --json-pp scan_results.json ."]

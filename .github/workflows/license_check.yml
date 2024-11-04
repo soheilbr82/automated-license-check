@@ -16,8 +16,7 @@ jobs:
 
     - name: Run Scancode
       run: |
-        docker run --rm -v ${{ github.workspace }}:/app/data scancode-image \
-        scancode --license --json-pp scan_results.json /app/data
+        docker run --rm -v ${{ github.workspace }}:/app/data scancode-image scancode --license --json-pp /app/data/scan_results.json /app/data
 
     - name: Upload Scan Results
       uses: actions/upload-artifact@v3
