@@ -9,7 +9,7 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v3
 
     - name: Build Scancode Docker image
       run: docker build -t scancode-image .
@@ -20,7 +20,7 @@ jobs:
         scancode --license --json-pp /app/data/scan_results.json /app/data
 
     - name: Upload Scan Results
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: scan_results.json
         path: scan_results.json
