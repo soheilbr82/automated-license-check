@@ -15,6 +15,7 @@ Add the following step to your workflow:
   with:
     allowed_licenses: "MIT, Apache-2.0, BSD-3-Clause"
 
+```
 
 ### Supported Licenses
 
