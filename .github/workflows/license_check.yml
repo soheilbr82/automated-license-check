@@ -1,65 +1,27 @@
-# name: License Compliance Check
-
-# on: [push, pull_request]
-
-# jobs:
-#   license-check:
-#     runs-on: ubuntu-latest
-
-#     steps:
-#     - name: Checkout repository
-#       uses: actions/checkout@v2
-
-#     - name: Set up Python
-#       uses: actions/setup-python@v2
-#       with:
-#         python-version: '3.11'
-
-#     - name: Install dependencies
-#       run: |
-#         python -m pip install --upgrade pip
-#         pip install toml pip-licenses requests
-
-#     - name: Run license checker
-#       run: python license_checker.py ${{ inputs.allowed_licenses }}
-#       env:
-#         ALLOWED_LICENSES: ${{ inputs.allowed_licenses }}
-
-# description: "Scans Python projects for license compliance, including dependencies from requirements files and Poetry."
 name: License Compliance Check
 
 on: [push, pull_request]
+  push:
 
 
 jobs:
-  license-check:
+  license-scan:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
+    - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Set up Python
-      uses: actions/setup-python@v2
+    - name: Build Scancode Docker image
+      run: docker build -t scancode-image .
+
+    - name: Run Scancode
+      run: |
+        docker run --rm -v ${{ github.workspace }}:/app/data scancode-image \
+        scancode --license --json-pp /app/data/scan_results.json /app/data
+
+    - name: Upload Scan Results
+      uses: actions/upload-artifact@v2
       with:
-        python-version: '3.11'
-
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install toml requests
-
-    - name: Download and install scancode-toolkit
-      run: |
-        wget https://github.com/aboutcode-org/scancode-toolkit/releases/download/v32.3.0/scancode-toolkit-v32.3.0_py3.11-linux.tar.gz
-        tar -xzf scancode-toolkit-v32.3.0_py3.11-linux.tar.gz
-        cd scancode-toolkit-v32.3.0
-        ./scancode --version
-
-
-    - name: Run license checker
-      run: |
-        cd scancode-toolkit-v32.3.0
-        python ../license_checkerv2.py ${{ inputs.allowed_licenses }}
-      env:
-        ALLOWED_LICENSES: ${{ inputs.allowed_licenses }}
+        name: scan_results.json
+        path: scan_results.json
