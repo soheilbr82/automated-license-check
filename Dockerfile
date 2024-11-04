@@ -37,6 +37,6 @@ COPY . /app
 # EXPOSE 8000
 
 # Set the entry point
-# ENTRYPOINT ["/app/venv/bin/scancode"]
+ENTRYPOINT ["/app/venv/bin/scancode"]
 
-CMD ["bash"]
+# CMD ["bash"]
