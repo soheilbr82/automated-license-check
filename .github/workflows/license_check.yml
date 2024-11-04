@@ -29,6 +29,11 @@ jobs:
 
     - name: List Unique Licenses
       run: |
-        jq -r '.summary.license_expressions[]' scan_results.json | sort | uniq > unique_licenses.txt
+        jq -r '
+              .license_detections[].license_expression |
+              gsub("[()]"; "") |
+              gsub(" AND "; " ") |
+              gsub(" OR "; " ") |
+              split(" ")[]' scan_results.json | sort | uniq > unique_licenses.txt
         echo "Unique Licenses Found:"
         cat unique_licenses.txt
