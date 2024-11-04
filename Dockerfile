@@ -17,14 +17,20 @@ ENV PATH="/venv/bin:$PATH"
 RUN /bin/bash -c "/venv/bin/pip install --upgrade pip && source /venv/bin/activate && pip install scancode-toolkit"
 
 
-# Set working directory
-WORKDIR /app
+# # Set working directory
+# WORKDIR /app
 
-# Copy your project files
-COPY . /app
+# # Copy your project files
+# COPY . /app
+
+# Copy the entrypoint script into the image
+COPY entrypoint.sh /entrypoint.sh
+
+# Make the entrypoint script executable
+RUN chmod +x /entrypoint.sh
+
+# Set the entrypoint
+ENTRYPOINT ["/entrypoint.sh"]
 
 # Set the entry point
-# ENTRYPOINT ["/app/venv/bin/scancode"]
-# ENTRYPOINT ["scancode"]
 CMD ["bash"]
-# CMD ["/venv/bin/scancode --license --json-pp scan_results.json ."]
