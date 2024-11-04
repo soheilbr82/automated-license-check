@@ -18,8 +18,25 @@ jobs:
       run: |
         docker run --rm -v ${{ github.workspace }}:/app/data scancode-image scancode --license --json-pp /app/data/scan_results.json /app/data
 
+    # - name: Upload Scan Results
+    #   uses: actions/upload-artifact@v3
+    #   with:
+    #     name: scan_results.json
+    #     path: scan_results.json
+    
+    - name: Install jq
+      run: sudo apt-get install -y jq
+
+    - name: List Unique Licenses
+      run: |
+        jq -r '.summary.license_expressions[]' /app/data/scan_results.json | sort | uniq > /app/data/unique_licenses.txt
+        echo "Unique Licenses Found:"
+        cat /app/data/unique_licenses.txt
+
     - name: Upload Scan Results
       uses: actions/upload-artifact@v3
       with:
-        name: scan_results.json
-        path: scan_results.json
+        name: scan_results
+        path: |
+          scan_results.json
+          unique_licenses.txt
