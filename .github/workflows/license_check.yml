@@ -16,7 +16,7 @@ jobs:
 
     - name: Run Scancode
       run: |
-        docker run --rm -v ${{ github.workspace }}:/app/data scancode-image \
+        docker run --rm -v /home/runner/work/automated-license-check/automated-license-check:/app/data scancode-image \
         scancode --license --json-pp /app/data/scan_results.json /app/data
 
     - name: Upload Scan Results
