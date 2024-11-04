@@ -5,6 +5,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     libmagic1 \
     libmagic-dev \
+    jq \
     && rm -rf /var/lib/apt/lists/*
 
 # Create a directory for the virtual environment
