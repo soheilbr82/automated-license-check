@@ -11,23 +11,11 @@ if [ -z "$ALLOWED_LICENSES_INPUT" ]; then
   exit 1
 fi
 
-# Convert the comma-separated string into an array and normalize to lowercase
-IFS=',' read -ra ALLOWED_LICENSES <<< "$ALLOWED_LICENSES_INPUT"
-
-# Trim whitespace, convert to lowercase, and remove duplicates
-declare -A ALLOWED_LICENSES_DICT
-for license in "${ALLOWED_LICENSES[@]}"; do
-  license=$(echo "$license" | tr '[:upper:]' '[:lower:]' | xargs)
-  ALLOWED_LICENSES_DICT["$license"]=1
-done
-
-# Get the unique allowed licenses
-ALLOWED_LICENSES=("${!ALLOWED_LICENSES_DICT[@]}")
+# Convert the comma-separated string into a sorted, unique list and normalize to lowercase
+echo "$ALLOWED_LICENSES_INPUT" | tr '[:upper:]' '[:lower:]' | tr ',' '\n' | xargs -n1 | sort | uniq > allowed_licenses.txt
 
 echo "Allowed Licenses:"
-for license in "${ALLOWED_LICENSES[@]}"; do
-  echo "- $license"
-done
+cat allowed_licenses.txt
 
 # Run Scancode to scan the codebase
 echo "Running Scancode on /github/workspace..."
@@ -41,7 +29,7 @@ if [ ! -f scan_results.json ]; then
   exit 1
 fi
 
-# Extract the list of detected licenses and normalize to lowercase
+# Extract the list of detected licenses, normalize to lowercase, and ensure uniqueness
 echo "Extracting detected licenses..."
 LICENSE_DETECTIONS_COUNT=$(jq '.license_detections | length' scan_results.json)
 
@@ -66,21 +54,13 @@ if [ ! -s detected_licenses.txt ]; then
   exit 1
 fi
 
-# Compare detected licenses against allowed licenses
-declare -A DISALLOWED_LICENSES_DICT
+# Compare detected licenses against allowed licenses using 'comm'
+# 'comm' requires both files to be sorted
+DISALLOWED_LICENSES=$(comm -23 detected_licenses.txt allowed_licenses.txt)
 
-while read -r license; do
-  license=$(echo "$license" | xargs | tr '[:upper:]' '[:lower:]')  # Normalize license
-  if [[ -z "${ALLOWED_LICENSES_DICT["$license"]+x}" ]]; then
-    DISALLOWED_LICENSES_DICT["$license"]=1
-  fi
-done < detected_licenses.txt
-
-if [ ${#DISALLOWED_LICENSES_DICT[@]} -ne 0 ]; then
+if [ -n "$DISALLOWED_LICENSES" ]; then
   echo "Disallowed licenses found:"
-  for license in "${!DISALLOWED_LICENSES_DICT[@]}"; do
-    echo "- $license"
-  done
+  echo "$DISALLOWED_LICENSES"
   exit 1
 else
   echo "All detected licenses are allowed."
