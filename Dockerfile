@@ -17,7 +17,6 @@ ENV PATH="/venv/bin:$PATH"
 # Activate virtual environment and install dependencies
 RUN /bin/bash -c "/venv/bin/pip install --upgrade pip && source /venv/bin/activate && pip install scancode-toolkit"
 
-
 # Copy the entrypoint script into the image
 COPY entrypoint.sh /entrypoint.sh
 
