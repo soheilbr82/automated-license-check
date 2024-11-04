@@ -1,7 +1,6 @@
 name: License Compliance Check
 
 on: [push, pull_request]
-  push:
 
 
 jobs:
