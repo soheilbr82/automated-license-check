@@ -13,10 +13,10 @@ jobs:
     - name: Run License Compliance Checker
       uses: ./
       with:
-        allowed_licenses: "MIT, Apache-2.0, BSD-3-Clause"
+        allowed_licenses: "MIT, Apache-2.0, BSD-3-Clause, bsd-new, json"
 
 
-        
+
 # name: License Compliance Check
 
 # on: [push, pull_request]
