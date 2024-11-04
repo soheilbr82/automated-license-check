@@ -5,6 +5,17 @@
 Scan your codebase for license compliance using Scancode Toolkit.
 
 
+## **Usage**
+
+Add the following step to your workflow:
+
+```yaml
+- name: Run License Compliance Checker
+  uses: soheilbr82/automated-license-check@v1
+  with:
+    allowed_licenses: "MIT, Apache-2.0, BSD-3-Clause"
+
+
 ### Supported Licenses
 
 This action recognizes a comprehensive range of open-source licenses, including commonly used ones such as:
@@ -19,13 +30,3 @@ For full coverage, this action covers licenses listed in the [SPDX License List]
 You can download the latest SPDX licenses from [spdx/license-list-data](https://github.com/spdx/license-list-data) github repo.
 
 
-
-## **Usage**
-
-Add the following step to your workflow:
-
-```yaml
-- name: Run License Compliance Checker
-  uses: soheilbr82/automated-license-check@v1
-  with:
-    allowed_licenses: "MIT, Apache-2.0, BSD-3-Clause"
