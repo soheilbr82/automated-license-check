@@ -42,10 +42,10 @@ Add the following step to your workflow:
 
 ## **How It Works**
 
-**1. Scan Codebase:** The action runs the Scancode Toolkit to analyze your repository for license information.
-**2. Extract Licenses:** It extracts all detected licenses from the code and dependencies.
-**3. Compare Licenses:** The detected licenses are compared against your specified list of allowed licenses.
-**4. Report Results:** If disallowed licenses are found, the action fails and reports the disallowed licenses in the workflow logs.
+1. **Scan Codebase:** The action runs the Scancode Toolkit to analyze your repository for license information.
+2. **Extract Licenses:** It extracts all detected licenses from the code and dependencies.
+3. **Compare Licenses:** The detected licenses are compared against your specified list of allowed licenses.
+4. **Report Results:** If disallowed licenses are found, the action fails and reports the disallowed licenses in the workflow logs.
 
 
 ## **Example Workflow File** 
