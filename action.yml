@@ -3,7 +3,7 @@ description: "Scans projects for license compliance using Scancode Toolkit."
 
 author: "Soheil Borhani <soheil.borhani@gmail.com>"
 branding:
-  color: "blue"
+  color: "green"
   icon: "shield"
 
 inputs:
