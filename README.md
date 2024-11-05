@@ -8,12 +8,11 @@ Scan your codebase for license compliance using Scancode Toolkit.
 
 
 **Key Features:**
-- Customizable Allowed Licenses: Specify a comma-separated list of allowed licenses based on your organization’s policies.
-- Comprehensive Scanning: Detects licenses in both your code and dependencies, regardless of the programming language.
-- Automated Enforcement: Integrates into your CI/CD pipeline to automatically enforce license compliance on every commit and pull request.
-
-- Clear Reporting: Provides a detailed output of detected licenses and highlights any disallowed licenses for easy remediation.
-- Easy Integration: Simple to set up with minimal configuration required.
+- **Customizable Allowed Licenses:** Specify a comma-separated list of allowed licenses based on your organization’s policies.
+- **Comprehensive Scanning:** Detects licenses in both your code and dependencies, regardless of the programming language.
+- **Automated Enforcement:** Integrates into your CI/CD pipeline to automatically enforce license compliance on every commit and pull request.
+- **Clear Reporting:** Provides a detailed output of detected licenses and highlights any disallowed licenses for easy remediation.
+- **Easy Integration:** Simple to set up with minimal configuration required.
 
 
 
